@@ -1,0 +1,37 @@
+﻿@page "/register"
+@using Model.Request
+@using Net
+@inject ServerFacade ServerFacade
+@inject NavigationManager NavigationManager
+
+<h3>Register</h3>
+<form @onsubmit="RegisterUser" @onsubmit:preventDefault >
+    <label for="username">username</label>
+    <input name="username" type="text" @bind="request.Username" />
+    <label for="email">Email</label>
+    <input name="email" @bind="request.Email" />
+    <label for="real-name">Real Name</label>
+    <input name="real-name" @bind="request.RealName" />
+    <label for="password">Password</label>
+    <input name="password" type="password" @bind="request.Password" />
+    <label for="password-confirmation">Confirm Password</label>
+    <input name="password-confirmation" type="password" @bind="passwordConfirmation" />
+    <button type="submit">Register</button>
+</form>
+
+@code {
+    private RegisterRequest request = new RegisterRequest();
+    private string passwordConfirmation;
+
+    public async void RegisterUser() {
+        if (passwordConfirmation != request.Password) return;
+
+        if (request.Validate()) {
+            var isSuccess = await ServerFacade.Register(request);
+
+            if (isSuccess) {
+                NavigationManager.NavigateTo("schedule");
+            }
+        } 
+    } 
+}

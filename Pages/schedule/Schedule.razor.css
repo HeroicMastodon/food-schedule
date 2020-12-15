@@ -1,0 +1,40 @@
+.day {
+	/* width: calc(100% / 7) */
+	grid-area: day;
+}
+
+.header {
+	/* min-width: 1em; */
+	grid-area: header;
+}
+
+.inner-container {
+    display: flex;
+    flex-direction: column;
+	gap: 1em;
+}
+
+.schedule-container {
+    display: flex;
+    flex-wrap: wrap;
+	margin: 1em;
+	gap: 1em;
+}
+
+.main-header-container {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-bottom: 2em;
+}
+
+.bottom-btn {
+    display: none;
+}
+
+@media only  screen and (max-width: 400px) {
+    .bottom-btn {
+        display: inline-block;
+        margin-bottom: 2em;
+    }
+}

@@ -1,0 +1,68 @@
+﻿@page "/schedule"
+@using Net
+@inject ServerFacade ServerFacade
+@inject NavigationManager NavigationManager
+<div class="main-header-container">
+    <h3>Schedule</h3>
+    <button @onclick="updateList">Save</button>
+</div>
+
+<div class="schedule-container">
+    <div class="inner-container">
+        <div class="day header">Sunday</div>
+        <input @onblur="updateList" @bind="Days[0]" type="text" class="day">
+    </div>
+    <div class="inner-container">
+        <div class="day header">Monday</div>
+        <input @onblur="updateList" @bind="Days[1]" type="text" class="day">
+    </div>
+    <div class="inner-container">
+        <div class="day header">Tuesday</div>
+        <input @onblur="updateList" @bind="Days[2]" type="text" class="day">
+    </div>
+    <div class="inner-container">
+        <div class="day header">Wednesday</div>
+        <input @onblur="updateList" @bind="Days[3]" type="text" class="day">
+    </div>
+    <div class="inner-container">
+        <div class="day header">Thursday</div>
+        <input @onblur="updateList" @bind="Days[4]" type="text" class="day">
+    </div>
+    <div class="inner-container">
+        <div class="day header">Friday</div>
+        <input @onblur="updateList" @bind="Days[5]" type="text" class="day">
+    </div>
+    <div class="inner-container">
+        <div class="day header">Saturday</div>
+        <input @onblur="updateList" @bind="Days[6]" type="text" class="day">
+    </div>
+</div>
+
+<button @onclick="updateList" class="bottom-btn">Save</button>
+
+@code {
+    private List<string> Days = new List<string> { "", "", "", "", "", "", "" };
+
+    protected async override Task OnInitializedAsync()
+    {
+        try
+        {
+            var res = await ServerFacade.GetFoodSchedule();
+            Days = res.Days;
+
+            if (Days == null || Days.Count < 7)
+            {
+                Days = new List<string> { "", "", "", "", "", "", "" };
+            }
+        }
+        catch (Exception)
+        {
+            NavigationManager.NavigateTo("");
+        }
+    }
+
+    public async void updateList()
+    {
+        await ServerFacade.UpdateFoodSchedule(Days);
+    }
+}

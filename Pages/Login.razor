@@ -1,0 +1,32 @@
+﻿@page "/"
+@page "/login"
+@using Model.Request
+@using Net
+@inject HttpClient Http
+@inject NavigationManager NavigationManager
+@inject ServerFacade ServerFacade
+
+<h3>Login</h3>
+
+<form @onsubmit="LoginUser" @onsubmit:preventDefault>
+    <input @bind="username" />
+    <input type="password" @bind="password">
+    <button type="submit">Login</button>
+</form>
+
+@code {
+    private string username;
+    private string password;
+
+    private async void LoginUser()
+    {
+        if (!string.IsNullOrWhiteSpace(username) && !string.IsNullOrWhiteSpace(password))
+        {
+            var isSuccess = await ServerFacade.Login(new LoginRequest(username, password));
+            if (isSuccess)
+            {
+                NavigationManager.NavigateTo("schedule");
+            }
+        }
+    }
+}
