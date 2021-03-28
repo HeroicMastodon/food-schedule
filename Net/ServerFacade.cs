@@ -13,6 +13,7 @@ using System.Net.Http.Headers;
 using Microsoft.AspNetCore.Components;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.WebAssembly.Http;
+using foodSchedule.Model.State;
 
 namespace foodSchedule.Net {
     public class ServerFacade {
@@ -21,37 +22,68 @@ namespace foodSchedule.Net {
         public HttpClient Client { get; set; }
 
         public ILocalStorageService LocalStorage {get; set;}
+        public State SessionState {get; private set;}
 
-        public ServerFacade(HttpClient client, ILocalStorageService localStorage) {
+        public ServerFacade(HttpClient client, ILocalStorageService localStorage, State state) {
             Client = client;
             LocalStorage = localStorage;
+            SessionState = state;
         }
 
-        public async Task<bool> Login(LoginRequest request)  {
+        public async Task<bool> Login(LoginRequest request)
+        {
             var res = await Client.PostAsJsonAsync("login", request);
+            await SetLoginInfo(res);
+            return SessionState.IsLoggedIn;
+        }
+
+        private async Task SetLoginInfo(HttpResponseMessage res)
+        {
             authToken = res.Headers.GetValues("Authorization").First();
             authToken = authToken.Substring(7);
             await LocalStorage.SetItemAsync("authtoken", authToken);
-            Console.WriteLine(authToken);
-            return res.IsSuccessStatusCode;
-        } 
+            SessionState.IsLoggedIn = res.IsSuccessStatusCode;
+        }
 
         public async Task<bool> Register(RegisterRequest request) {
             var res = await Client.PostAsJsonAsync("register", request);
-            return res.IsSuccessStatusCode;
+            await SetLoginInfo(res);
+            return SessionState.IsLoggedIn;
         }
 
-        public async Task<GetFoodScheduleResponse> GetFoodSchedule() {
+        public async Task<bool> Authenticate() {
+            var request = new HttpRequestMessage(HttpMethod.Get, "login");
+            await AddAuthTokenToRequest(request);
+            var res = await Client.SendAsync(request);
+            SessionState.IsLoggedIn = res.IsSuccessStatusCode;
+
+            return SessionState.IsLoggedIn;
+        }
+
+        public async Task<GetFoodScheduleResponse> GetFoodSchedule()
+        {
             var request = new HttpRequestMessage(HttpMethod.Get, "");
 
-            if (authToken == null) {
+            await AddAuthTokenToRequest(request);
+
+            var res = await Client.SendAsync(request);
+            var list = await res.Content.ReadFromJsonAsync<GetFoodScheduleResponse>();
+
+            return list;
+        }
+
+        private async Task AddAuthTokenToRequest(HttpRequestMessage request)
+        {
+            if (authToken == null)
+            {
                 authToken = await LocalStorage.GetItemAsync<string>("authtoken");
+                if (authToken == null)
+                {
+                    throw new Exception("Missing No auth Token");
+                }
             }
 
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
-            var res = await Client.SendAsync(request);
-            var list = await res.Content.ReadFromJsonAsync<GetFoodScheduleResponse>();
-            return list;
         }
 
         public async Task<GetFoodScheduleResponse> UpdateFoodSchedule(List<string> days) {

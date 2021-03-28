@@ -1,7 +1,10 @@
 ﻿@page "/schedule"
 @using Net
+@using Model.State
+@implements StateSubscriber
 @inject ServerFacade ServerFacade
 @inject NavigationManager NavigationManager
+@inject State State
 <div class="main-header-container">
     <h3>Schedule</h3>
     <button @onclick="updateList">Save</button>
@@ -45,6 +48,18 @@
 
     protected async override Task OnInitializedAsync()
     {
+        if (! State.IsLoggedIn && ! await ServerFacade.Authenticate()) {
+            NavigationManager.NavigateTo("");
+        }
+        await RetrieveFoodSchedule();
+    }
+
+    public async void updateList()
+    {
+        await ServerFacade.UpdateFoodSchedule(Days);
+    }
+
+    private async Task RetrieveFoodSchedule() {
         try
         {
             var res = await ServerFacade.GetFoodSchedule();
@@ -61,8 +76,7 @@
         }
     }
 
-    public async void updateList()
-    {
-        await ServerFacade.UpdateFoodSchedule(Days);
+    public void NotifyStateChanged() {
+
     }
 }

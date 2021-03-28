@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using foodSchedule.Net;
 using Blazored.LocalStorage;
+using foodSchedule.Model.State;
 
 namespace foodSchedule {
     public class Program {
@@ -23,6 +24,7 @@ namespace foodSchedule {
             builder.Services
                 .AddScoped(sp => new HttpClient { BaseAddress = uri })
                 .AddBlazoredLocalStorage()
+                .AddSingleton<State>()
                 .AddScoped<ServerFacade, ServerFacade>();
 
             await builder.Build().RunAsync();
