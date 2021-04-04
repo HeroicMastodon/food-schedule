@@ -41,4 +41,14 @@ namespace foodSchedule.Model.Request {
             Days = days;
         }
     }
+
+    public class UpdateExpensesRequest {
+        public UpdateExpensesRequest(string userId, List<Expense> expenses) {
+            UserId = userId;
+            Expenses = expenses;
+        }
+
+        public string UserId {get; set;}
+        public List<Expense> Expenses {get; set;}
+    }
 }

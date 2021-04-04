@@ -95,6 +95,7 @@
                 <td>$@item.Cost</td>
                 <td>@item.Category</td>
                 <td>@item.ImportanceName</td>
+                <button @onclick="() => DeleteExpense(item)" class="btn  btn-outline-danger delete"><span class="oi oi-delete"></span></button>
             </tr>
         }
     </tbody>

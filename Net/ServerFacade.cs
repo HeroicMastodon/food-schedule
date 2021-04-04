@@ -102,5 +102,28 @@ namespace foodSchedule.Net {
             SessionState.IsLoggedIn = false;
             return true;
         }
+
+        public async Task<GetExpensesResponse> RetrieveExpenses() {
+            var request = new HttpRequestMessage(HttpMethod.Get, "expenses");
+
+            await AddAuthTokenToRequest(request);
+
+            var res = await Client.SendAsync(request);
+            var expenses = await res.Content.ReadFromJsonAsync<GetExpensesResponse>();
+
+            return expenses;
+        }
+
+        public async Task<GetExpensesResponse> UpdateExpenses(List<Expense> expenses) {
+            var request = new HttpRequestMessage(HttpMethod.Post, "expenses/update");
+            request.Content = JsonContent.Create(new UpdateExpensesRequest(null, expenses));
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+
+            var res = await Client.SendAsync(request);
+
+            if (! res.IsSuccessStatusCode) return null;
+
+            return await res.Content.ReadFromJsonAsync<GetExpensesResponse>();
+        }
     }
 }

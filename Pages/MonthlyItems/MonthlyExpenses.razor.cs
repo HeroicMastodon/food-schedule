@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using foodSchedule.Model;
 using Microsoft.AspNetCore.Components;
+using foodSchedule.Net;
+using System.Threading.Tasks;
+using System;
 
 namespace foodSchedule.Pages {
     public class ExpensesBase: ComponentBase {
@@ -11,13 +14,33 @@ namespace foodSchedule.Pages {
         protected List<Expense> Expenses {get; set;} = new List<Expense>();
         protected List<Expense> FilteredExpenses {get; set;} = new List<Expense>();
         protected ExpenseFilter Filter {get; set;} = new ExpenseFilter();
+        [Inject]
+        protected ServerFacade ServerFacade {get; set;}
+        [Inject]
+        protected NavigationManager NavigationManager {get; set;}
+
+        protected override async Task OnInitializedAsync() {
+            if (! await ServerFacade.Authenticate()) NavigationManager.NavigateTo("");
+            Expenses = (await ServerFacade.RetrieveExpenses()).Expenses;
+            FilterExpenses();
+        }
+
 
         protected async void Save() {
             if (string.IsNullOrEmpty(NewExpense.Name)) return;
             Expenses.Add(NewExpense);
+            await ServerFacade.UpdateExpenses(Expenses);
             FilterExpenses();
             NewExpense = new Expense();
             IsFormOpen = false;
+            base.StateHasChanged();
+        }
+
+        protected async void DeleteExpense(Expense expense) {
+            Expenses.Remove(expense);
+            await ServerFacade.UpdateExpenses(Expenses);
+            FilterExpenses();
+            base.StateHasChanged();
         }
 
         protected void FilterExpenses() {

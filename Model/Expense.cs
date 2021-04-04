@@ -2,10 +2,10 @@ using System.Windows.Markup;
 
 namespace foodSchedule.Model {
     public class Expense {
-        public string Name {get; set;}
-        public int Cost {get; set;}
-        public int Importance {get; set;}
-        public string Category {get; set;}
+        public string Name {get; set;} = "";
+        public int Cost {get; set;} = 0;
+        public int Importance {get; set;} = 0;
+        public string Category {get; set;} = "None";
 
         public override string ToString()
         {

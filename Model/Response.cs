@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace foodSchedule.Model {
     public class GetFoodScheduleResponse {
 
-        public List<string> Days {get; set;} = new List<string>();
+        public List<string> Days { get; set; } = new List<string>();
 
         public GetFoodScheduleResponse() {
             for (int i = 0; i < 7; i++) {
@@ -13,6 +13,14 @@ namespace foodSchedule.Model {
 
         public GetFoodScheduleResponse(List<string> days) {
             Days = days;
+        }
+    }
+
+    public class GetExpensesResponse {
+        public List<Expense> Expenses { get; set; }
+
+        public GetExpensesResponse(List<Expense> expenses) {
+            Expenses = expenses;
         }
     }
 }
