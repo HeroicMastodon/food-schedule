@@ -4,20 +4,32 @@ using Microsoft.AspNetCore.Components;
 using foodSchedule.Net;
 using System.Threading.Tasks;
 using System;
+using System.Linq;
 
 namespace foodSchedule.Pages {
     public class ExpensesBase: ComponentBase {
         protected bool IsFormOpen {get; set;}
         protected bool IsFilterFormOpen {get; set;}
+        protected bool IsEditFormOpen {get; set;}
         protected bool ShouldFilter {get; set;} = false;
         protected Expense NewExpense {get; set;} = new Expense();
+        protected Expense EditExpense {get; set;}
         protected List<Expense> Expenses {get; set;} = new List<Expense>();
         protected List<Expense> FilteredExpenses {get; set;} = new List<Expense>();
+        
         protected ExpenseFilter Filter {get; set;} = new ExpenseFilter();
         [Inject]
         protected ServerFacade ServerFacade {get; set;}
         [Inject]
         protected NavigationManager NavigationManager {get; set;}
+
+        protected int GetFilteredCosts() {
+            return FilteredExpenses.Sum(expense => expense.Cost);
+        }
+
+        protected int GetTotalCosts() {
+            return Expenses.Sum(expense => expense.Cost);
+        }
 
         protected override async Task OnInitializedAsync() {
             if (! await ServerFacade.Authenticate()) NavigationManager.NavigateTo("");
@@ -25,14 +37,29 @@ namespace foodSchedule.Pages {
             FilterExpenses();
         }
 
+        protected void OpenEditForm(Expense expense) {
+            EditExpense = expense;
+            IsEditFormOpen = true;
+        }
 
-        protected async void Save() {
+        protected void CloseEditForm() {
+            IsEditFormOpen = false;
+        }
+
+        protected async void AddNewExpense() {
             if (string.IsNullOrEmpty(NewExpense.Name)) return;
             Expenses.Add(NewExpense);
             await ServerFacade.UpdateExpenses(Expenses);
             FilterExpenses();
             NewExpense = new Expense();
             IsFormOpen = false;
+            base.StateHasChanged();
+        }
+
+        protected async void UpdateExpenses() {
+            await ServerFacade.UpdateExpenses(Expenses);
+            FilterExpenses();
+            CloseEditForm();
             base.StateHasChanged();
         }
 

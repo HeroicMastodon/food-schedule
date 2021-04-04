@@ -98,6 +98,8 @@ namespace foodSchedule.Net {
         }
 
         public async Task<bool> Logout() {
+            var request = new HttpRequestMessage(HttpMethod.Delete, "");
+            await Client.SendAsync(request);
             await LocalStorage.ClearAsync();
             SessionState.IsLoggedIn = false;
             return true;
