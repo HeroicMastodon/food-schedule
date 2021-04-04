@@ -1,5 +1,6 @@
 ﻿@using Model.State
 
+@inject Net.ServerFacade ServerFacade
 @inject State state
 @implements StateSubscriber
 
@@ -12,16 +13,35 @@
 
 <div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
     <ul class="nav flex-column">
-        @if (isLoggedIn) {
+        @if (isLoggedIn)
+        {
             <li class="nav-item px-3">
                 <NavLink class="nav-link" href="schedule">
                     <span class="oi oi-list-rich" aria-hidden="true"></span> Schedule
                 </NavLink>
             </li>
-        }
-        else {
             <li class="nav-item px-3">
-                <NavLink class="nav-link" href="login" >
+                <NavLink class="nav-link" href="expenses">
+                    <span class="oi oi-dollar" aria-hidden="true"></span>
+                    Expenses
+                </NavLink>
+            </li>
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="wishlist">
+                    <span class="oi oi-list" aria-hidden="true"></span>
+                    Wish List
+                </NavLink>
+            </li>
+            <li class="nav-item px-3 logout-btn" @onclick="Logout">
+                <a class="nav-link">
+                    <span class="oi oi-account-logout" aria-hidden="true"></span> Logout
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="login">
                     <span class="oi oi-home" aria-hidden="true"></span> Login
                 </NavLink>
             </li>
@@ -45,12 +65,18 @@
         collapseNavMenu = !collapseNavMenu;
     }
 
-    protected async override Task OnInitializedAsync() {
+    private async void Logout() {
+        await ServerFacade.Logout();
+    }
+
+    protected override void OnInitialized()
+    {
         state.Subscribe(this);
     }
 
-    public void NotifyStateChanged() {
-       isLoggedIn = state.IsLoggedIn; 
-       base.StateHasChanged();
+    public void NotifyStateChanged()
+    {
+        isLoggedIn = state.IsLoggedIn;
+        base.StateHasChanged();
     }
 }

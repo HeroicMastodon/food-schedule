@@ -1,0 +1,101 @@
+@page "/expenses"
+@inherits ExpensesBase
+
+<div class="header">
+    <h2>Expenses</h2>
+    <button type="menu" class="btn btn-secondary" @onclick="() => IsFormOpen = true">
+        <span class="oi oi-plus"></span>
+        Add
+    </button>
+    <button type="menu" class="btn btn-secondary" @onclick="() => IsFilterFormOpen = true">
+        Filter
+    </button>
+</div>
+
+@if (IsFormOpen) {
+
+    <div class="modal-mask">
+        <div class="new-item-form-container">
+            <div class="new-item-form">
+                <h3>New Expense</h3>
+                <div class="element">
+                    <label for="name">Name: </label><input type="text" name="name" @bind="NewExpense.Name" />
+                </div>
+                <div class="element">
+                    <label for="cost">Cost: $</label><input min="0" name="cost" type="number" @bind="NewExpense.Cost" />
+                </div>
+                <div class="element">
+                    <label for="category">Category: </label><input type="text" name="category" @bind="NewExpense.Category">
+                </div>
+                <div class="element">
+                    <label for="importance">Importance: </label>
+                    <select name="importance" @bind="NewExpense.Importance" >
+                        <option value="0">Not Important</option>
+                        <option value="1">Important</option>
+                        <option value="2">Very Important</option>
+                    </select>
+                </div>
+                <div class="btns">
+                    <button type="submit" class="btn btn-primary" @onclick="Save" >Save</button>
+                    <button class="btn btn-secondary" @onclick="() => IsFormOpen = false">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (IsFilterFormOpen) {
+    <div class="modal-mask">
+        <div class="new-item-form-container">
+            <div class="new-item-form">
+                <h3>Filter Expenses</h3>
+                <div class="element">
+                    <label for="name">Name Filter: </label><input type="text" name="name" @bind="Filter.Name" />
+                </div>
+                <div class="element">
+                    <label for="lower">Minimum Cost: $</label><input name="lower" type="number" @bind="Filter.CostLowerBound" />
+                </div>
+                <div class="element">
+                    <label for="upper">Maximum Cost: $</label><input name="upper" type="number" @bind="Filter.CostUpperBound" />
+                </div>
+                <div class="element">
+                    <label for="category">Category Filter: </label><input type="text" name="category" @bind="Filter.Category" />
+                </div>
+                <div class="element">
+                    <label for="notImportant">Not Important: </label>
+                    <input type="checkbox" name="notImportant" @bind="Filter.NotImportant" />
+                    <label for="important">Important: </label>
+                    <input type="checkbox" name="important" @bind="Filter.Important" />
+                    <label for="veryImportant">Very Important: </label>
+                    <input type="checkbox" name="veryImportant" @bind="Filter.VeryImportant" />
+                </div>
+                <div class="btns">
+                    <button type="submit" class="btn btn-primary" @onclick="() => {ShouldFilter = true; FilterExpenses();}" >Filter</button>
+                    <button class="btn btn-secondary" @onclick="() => IsFilterFormOpen = false">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th class="tbl-header" @onclick='() => SortExpenses("name")' @ondblclick='() => SortExpenses("name", true)'>Name</th>
+            <th class="tbl-header" @onclick='() => SortExpenses("cost")' @ondblclick='() => SortExpenses("cost", true)'>Cost</th>
+            <th class="tbl-header" @onclick='() => SortExpenses("category")' @ondblclick='() => SortExpenses("category", true)'>Category</th>
+            <th class="tbl-header" @onclick='() => SortExpenses("importance")' @ondblclick='() => SortExpenses("importance", true)'>Importance</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in FilteredExpenses)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>$@item.Cost</td>
+                <td>@item.Category</td>
+                <td>@item.ImportanceName</td>
+            </tr>
+        }
+    </tbody>
+</table>

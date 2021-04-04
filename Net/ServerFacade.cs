@@ -1,18 +1,13 @@
-using System.Linq.Expressions;
 using System.Net.Http;
-using System.Net;
 using foodSchedule.Model.Request;
 using System.Net.Http.Json;
 using System.Threading.Tasks;
 using System;
-using System.Runtime.CompilerServices;
 using foodSchedule.Model;
 using System.Linq;
 using System.Collections.Generic;
 using System.Net.Http.Headers;
-using Microsoft.AspNetCore.Components;
 using Blazored.LocalStorage;
-using Microsoft.AspNetCore.Components.WebAssembly.Http;
 using foodSchedule.Model.State;
 
 namespace foodSchedule.Net {
@@ -53,10 +48,15 @@ namespace foodSchedule.Net {
 
         public async Task<bool> Authenticate() {
             var request = new HttpRequestMessage(HttpMethod.Get, "login");
-            await AddAuthTokenToRequest(request);
-            var res = await Client.SendAsync(request);
-            SessionState.IsLoggedIn = res.IsSuccessStatusCode;
+            try {
+                await AddAuthTokenToRequest(request);
+                var res = await Client.SendAsync(request);
+                if (res.IsSuccessStatusCode)
+                SessionState.IsLoggedIn = res.IsSuccessStatusCode;
 
+            } catch (Exception) {
+                SessionState.IsLoggedIn = false;
+            }
             return SessionState.IsLoggedIn;
         }
 
@@ -79,7 +79,7 @@ namespace foodSchedule.Net {
                 authToken = await LocalStorage.GetItemAsync<string>("authtoken");
                 if (authToken == null)
                 {
-                    throw new Exception("Missing No auth Token");
+                    throw new Exception("Missing auth Token");
                 }
             }
 
@@ -92,11 +92,15 @@ namespace foodSchedule.Net {
             request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
             var res = await Client.SendAsync(request);
 
-            // var res = await Client.PostAsJsonAsync("update", new UpdateScheduleRequest(null, days));
-            
             if (! res.IsSuccessStatusCode) return null;
 
             return await res.Content.ReadFromJsonAsync<GetFoodScheduleResponse>();
+        }
+
+        public async Task<bool> Logout() {
+            await LocalStorage.ClearAsync();
+            SessionState.IsLoggedIn = false;
+            return true;
         }
     }
 }

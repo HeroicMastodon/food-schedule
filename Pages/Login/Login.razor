@@ -2,9 +2,11 @@
 @page "/login"
 @using Model.Request
 @using Net
+@using Model.State
 @inject HttpClient Http
 @inject NavigationManager NavigationManager
 @inject ServerFacade ServerFacade
+@inject State State
 
 <h3>Login</h3>
 
@@ -17,6 +19,15 @@
 @code {
     private string username;
     private string password;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await ServerFacade.Authenticate();
+
+        if (State.IsLoggedIn) NavigationManager.NavigateTo("schedule");
+    }
+
+    
 
     private async void LoginUser()
     {

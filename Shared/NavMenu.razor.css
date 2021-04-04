@@ -50,6 +50,10 @@
     color: white;
 }
 
+.logout-btn:hover {
+   cursor: pointer;
+}
+
 @media (min-width: 641px) {
     .navbar-toggler {
         display: none;

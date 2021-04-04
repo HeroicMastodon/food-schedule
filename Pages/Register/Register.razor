@@ -1,8 +1,10 @@
 ﻿@page "/register"
 @using Model.Request
 @using Net
+@using Model.State
 @inject ServerFacade ServerFacade
 @inject NavigationManager NavigationManager
+@inject State State
 
 <h3>Register</h3>
 <form @onsubmit="RegisterUser" @onsubmit:preventDefault >
@@ -23,6 +25,12 @@
     private RegisterRequest request = new RegisterRequest();
     private string passwordConfirmation;
 
+    protected override async Task OnInitializedAsync()
+    {
+        await ServerFacade.Authenticate();
+
+        if (State.IsLoggedIn) NavigationManager.NavigateTo("schedule");
+    }
     public async void RegisterUser() {
         if (passwordConfirmation != request.Password) return;
 
