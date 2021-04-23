@@ -14,138 +14,157 @@
 @if (IsFormOpen)
 {
     <div class="modal-mask" @onclick="() => IsFormOpen = false">
-    <div class="new-item-form-container" @onclick:stopPropagation>
-        <div class="new-item-form">
-            <h3>New Expense</h3>
-            <div class="element">
-                <label for="name">Name: </label><input type="text" name="name" @bind="NewExpense.Name" />
-            </div>
-            <div class="element">
-                <label for="cost">Cost: $</label><input min="0" name="cost" type="number" @bind="NewExpense.Cost" />
-            </div>
-            <div class="element">
-                <label for="category">Category: </label><input type="text" name="category" @bind="NewExpense.Category">
-            </div>
-            <div class="element">
-                <label for="importance">Importance: </label>
-                <select name="importance" @bind="NewExpense.Importance">
-                    <option value="0">Not Important</option>
-                    <option value="1">Important</option>
-                    <option value="2">Very Important</option>
-                </select>
-            </div>
-            <div class="btns">
-                <button type="submit" class="btn btn-primary" @onclick="AddNewExpense">Save</button>
-                <button class="btn btn-secondary" @onclick="() => IsFormOpen = false">Close</button>
+        <div class="new-item-form-container" @onclick:stopPropagation>
+            <div class="new-item-form">
+                <h3>New Expense</h3>
+                <div class="element">
+                    <label for="name">Name: </label><input type="text" name="name" @bind="NewExpense.Name"/>
+                </div>
+                <div class="element">
+                    <label for="cost">Cost: $</label><input min="0" name="cost" type="number" @bind="NewExpense.Cost"/>
+                </div>
+                <div class="element">
+                    <label for="count">Count: </label><input id="count"  type="number" @bind="NewExpense.Count">
+                </div>
+                <div class="element">
+                    <label for="category">Category: </label><input type="text" name="category" @bind="NewExpense.Category">
+                </div>
+                <div class="element">
+                    <label for="importance">Importance: </label>
+                    <select name="importance" @bind="NewExpense.Importance">
+                        <option value="0">Not Important</option>
+                        <option value="1">Important</option>
+                        <option value="2">Very Important</option>
+                    </select>
+                </div>
+                <div class="btns">
+                    <button type="submit" class="btn btn-primary" @onclick="AddNewExpense">Save</button>
+                    <button class="btn btn-secondary" @onclick="() => IsFormOpen = false">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 
 @if (IsEditFormOpen)
 {
     <div class="modal-mask" @onclick="CloseEditForm">
-    <div class="new-item-form-container" @onclick:stopPropagation>
-        <div class="new-item-form">
-            <h3>Edit Expense</h3>
-            <div class="element">
-                <label for="name">Name: </label><input type="text" name="name" @bind="EditExpense.Name" />
-            </div>
-            <div class="element">
-                <label for="cost">Cost: $</label><input min="0" name="cost" type="number" @bind="EditExpense.Cost" />
-            </div>
-            <div class="element">
-                <label for="category">Category: </label><input type="text" name="category" @bind="EditExpense.Category">
-            </div>
-            <div class="element">
-                <label for="importance">Importance: </label>
-                <select name="importance" @bind="EditExpense.Importance">
-                    <option value="0">Not Important</option>
-                    <option value="1">Important</option>
-                    <option value="2">Very Important</option>
-                </select>
-            </div>
-            <div class="btns">
-                <button type="submit" class="btn btn-primary" @onclick="UpdateExpenses">Save</button>
-                <button class="btn btn-secondary" @onclick="() => CloseEditForm()">Close</button>
+        <div class="new-item-form-container" @onclick:stopPropagation>
+            <div class="new-item-form">
+                <h3>Edit Expense</h3>
+                <div class="element">
+                    <label for="name">Name: </label><input type="text" name="name" @bind="EditExpense.Name"/>
+                </div>
+                <div class="element">
+                    <label for="cost">Cost: $</label><input min="0" name="cost" type="number" @bind="EditExpense.Cost"/>
+                </div>
+                <div class="element">
+                    <label for="count">Count: </label><input name="count"  type="number" @bind="EditExpense.Count">
+                </div>
+                <div class="element">
+                    <label for="category">Category: </label><input type="text" name="category" @bind="EditExpense.Category">
+                </div>
+                <div class="element">
+                    <label for="importance">Importance: </label>
+                    <select name="importance" @bind="EditExpense.Importance">
+                        <option value="0">Not Important</option>
+                        <option value="1">Important</option>
+                        <option value="2">Very Important</option>
+                    </select>
+                </div>
+                <div class="btns">
+                    <button type="submit" class="btn btn-primary" @onclick="UpdateExpenses">Save</button>
+                    <button class="btn btn-secondary" @onclick="CloseEditForm">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 @if (IsFilterFormOpen)
 {
     <div class="modal-mask" @onclick="() => IsFilterFormOpen = false">
-    <div class="new-item-form-container" @onclick:stopPropagation>
-        <div class="new-item-form">
-            <h3>Filter Expenses</h3>
-            <div class="element">
-                <label for="name">Name Filter: </label><input type="text" name="name" @bind="Filter.Name" />
-            </div>
-            <div class="element">
-                <label for="lower">Minimum Cost: $</label><input name="lower" type="number"
-                    @bind="Filter.CostLowerBound" />
-            </div>
-            <div class="element">
-                <label for="upper">Maximum Cost: $</label><input name="upper" type="number"
-                    @bind="Filter.CostUpperBound" />
-            </div>
-            <div class="element">
-                <label for="category">Category Filter: </label><input type="text" name="category"
-                    @bind="Filter.Category" />
-            </div>
-            <div class="element">
-                <label for="notImportant">Not Important: </label>
-                <input type="checkbox" name="notImportant" @bind="Filter.NotImportant" />
-                <label for="important">Important: </label>
-                <input type="checkbox" name="important" @bind="Filter.Important" />
-                <label for="veryImportant">Very Important: </label>
-                <input type="checkbox" name="veryImportant" @bind="Filter.VeryImportant" />
-            </div>
-            <div class="btns">
-                <button type="submit" class="btn btn-primary"
-                    @onclick="() => {ShouldFilter = true; FilterExpenses();}">Filter</button>
-                <button class="btn btn-secondary" @onclick="() => IsFilterFormOpen = false">Close</button>
+        <div class="new-item-form-container" @onclick:stopPropagation>
+            <div class="new-item-form">
+                <h3>Filter Expenses</h3>
+                <div class="element">
+                    <label for="name">Name Filter: </label><input type="text" name="name" @bind="Filter.Name"/>
+                </div>
+                <div class="element">
+                    <label for="lower">Minimum Cost: $</label>
+                    <input name="lower" type="number"
+                           @bind="Filter.CostLowerBound"/>
+                </div>
+                <div class="element">
+                    <label for="upper">Maximum Cost: $</label>
+                    <input name="upper" type="number"
+                           @bind="Filter.CostUpperBound"/>
+                </div>
+                <div class="element">
+                    <label for="category">Category Filter: </label>
+                    <input type="text" name="category"
+                           @bind="Filter.Category"/>
+                </div>
+                <div class="element">
+                    <label for="notImportant">Not Important: </label>
+                    <input type="checkbox" name="notImportant" @bind="Filter.NotImportant"/>
+                    <label for="important">Important: </label>
+                    <input type="checkbox" name="important" @bind="Filter.Important"/>
+                    <label for="veryImportant">Very Important: </label>
+                    <input type="checkbox" name="veryImportant" @bind="Filter.VeryImportant"/>
+                </div>
+                <div class="btns">
+                    <button type="submit" class="btn btn-primary"
+                            @onclick="() => {ShouldFilter = true; FilterExpenses();}">
+                        Filter
+                    </button>
+                    <button class="btn btn-secondary" @onclick="() => IsFilterFormOpen = false">Close</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 }
 <div class="table-responsive">
-    <table class="table">
+    <table class="table-dark table">
         <caption>Total Cost $@GetTotalCosts()</caption>
         <thead>
-            <tr>
-                <th class="tbl-header" @onclick='() => SortExpenses("name")'
-                    @ondblclick='() => SortExpenses("name", true)'>
-                    Name</th>
-                <th class="tbl-header" @onclick='() => SortExpenses("cost")'
-                    @ondblclick='() => SortExpenses("cost", true)'>
-                    Cost</th>
-                <th class="tbl-header optional-col" @onclick='() => SortExpenses("category")'
-                    @ondblclick='() => SortExpenses("category", true)'>Category</th>
-                <th class="tbl-header optional-col" @onclick='() => SortExpenses("importance")'
-                    @ondblclick='() => SortExpenses("importance", true)'>Importance</th>
-                <th class="">Cost shown $@GetFilteredCosts()</th>
-            </tr>
+        <tr>
+            <th class="tbl-header" @onclick='() => SortExpenses("name")'
+                @ondblclick='() => SortExpenses("name", true)'>
+                Name
+            </th>
+            <th class="tbl-header" @onclick='() => SortExpenses("cost")'
+                @ondblclick='() => SortExpenses("cost", true)'>
+                Cost Per Item / Total
+            </th>
+            <th class="tbl-header optional-col" @onclick='() => SortExpenses("category")'
+                @ondblclick='() => SortExpenses("category", true)'>
+                Category
+            </th>
+            <th class="tbl-header optional-col" @onclick='() => SortExpenses("importance")'
+                @ondblclick='() => SortExpenses("importance", true)'>
+                Importance
+            </th>
+            <th class="tbl_header optional-col" @onclick='() => SortExpenses("count")'>Count</th>
+            <th class="tbl-header text-end">Cost shown $@GetFilteredCosts()</th>
+        </tr>
         </thead>
         <tbody>
-            @foreach (var item in FilteredExpenses)
-            {
-                <tr>
-                    <td>@item.Name</td>
-                    <td>$@item.Cost</td>
-                    <td class="optional-col">@item.Category</td>
-                    <td class="optional-col">@item.ImportanceName</td>
-                    <td>
-                        <div class="btn-group">
-                            <span @onclick="() => OpenEditForm(item)" class="oi oi-pencil tbl-header"></span>
-                            <span @onclick="() => DeleteExpense(item)" class="oi oi-delete tbl-header"></span>
-                        </div>
-                    </td>
-                </tr>
-            }
+        @foreach (var item in FilteredExpenses)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>$@item.Cost / $@item.TotalCost</td>
+                <td class="optional-col">@item.Category</td>
+                <td class="optional-col">@item.ImportanceName</td>
+                <td class="option_col">@item.Count</td>
+                <td>
+                    <div class="btn-group">
+                        <span @onclick="() => OpenEditForm(item)" class="oi oi-pencil tbl-header"></span>
+                        <span @onclick="() => DeleteExpense(item)" class="oi oi-delete tbl-header"></span>
+                    </div>
+                </td>
+            </tr>
+        }
         </tbody>
     </table>
 </div>

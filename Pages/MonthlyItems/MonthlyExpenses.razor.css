@@ -6,8 +6,7 @@
 
 
 .modal-mask {
-    background-color: black;
-    opacity: .9;
+    background-color: rgba(0,0,0,.9);
     height: 100vh;
     width: 100vw;
     position: absolute;
@@ -20,11 +19,14 @@
 .new-item-form-container {
     margin: auto;
     padding: 1em;
-    background-color: white;
+    background-color: #585858;
     opacity: 1;
     z-index: 20;
 }
 
+tr > * + * {
+    text-align: center;
+}
 
 .new-item-form {
     display: flex;
@@ -32,6 +34,14 @@
     align-items: center;
     justify-content: flex-start;
     gap: .5em;
+    opacity: 1;
+    z-index: 30;
+}
+.element {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
 
 .tbl-header:hover {

@@ -1,3 +1,188 @@
 @page "/wishlist"
+@inherits WishListBase
 
-<h2>Wish List</h2>
+<div class="titlebar">
+    <h2>Wish List</h2>
+    <div class="icon-group">
+        <span @onclick="() => OpenForm()" class="material-icons icon">add_circle_outline</span>
+        <span @onclick="OpenFilterForm" class="material-icons icon">filter_alt</span>
+        <span @onclick="OpenSortForm" class="material-icons icon">sort</span>
+    </div>
+</div>
+
+<div class="titlebar mb-2">
+    <div>WishList Total $@WishListTotal</div>
+    <div>Filtered Total $@FilteredTotal</div>
+</div>
+
+
+@if (IsNewItemFormOpen)
+{
+    <div class="modal-mask" @onclick="CloseForms">
+        <div class="new-item-form-container" @onclick:stopPropagation>
+            <div class="item-form">
+                <h3>New Expense</h3>
+                <div class="element">
+                    <label for="name">Name: </label><input type="text" name="name" @bind="FormItem.Name"/>
+                </div>
+                <div class="element">
+                    <label for="cost">Cost: $</label><input min="0" name="cost" type="number" @bind="FormItem.Cost"/>
+                </div>
+                <div class="element">
+                    <label for="category">Category: </label><input type="text" name="category" @bind="FormItem.Category">
+                </div>
+                <div class="element">
+                    <label for="importance">Importance: </label>
+                    <select name="importance" @bind="FormItem.Importance">
+                        <option value="0">Not Important</option>
+                        <option value="1">Important</option>
+                        <option value="2">Very Important</option>
+                    </select>
+                </div>
+                <div class="element">
+                    <label for="imageUrl">Image URL</label><input type="text" id="imageUrl" @bind="FormItem.ImageUrl">
+                </div>
+                <div class="element">
+                    <label for="dateWanted">Date Wanted</label><input type="date" id="dateWanted" @bind="FormItem.DateWanted.DateTimeOffset">
+                </div>
+                <div class="element">
+                    <label for="link">Link:</label><input type="text" id="link" @bind="FormItem.Link"/>
+                </div>
+                <div class="element description">
+                    <label for="description">Description</label><textarea type="text" id="description" @bind="FormItem.Description"></textarea>
+                </div>
+                <div class="btns">
+                    <button type="submit" class="btn btn-primary" @onclick="SaveItem">Save</button>
+                    <button class="btn btn-secondary" @onclick="CloseForms">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+
+@if (IsFilterFormOpen)
+{
+    <div class="modal-mask" @onclick="CloseForms">
+        <div class="new-item-form-container" @onclick:stopPropagation>
+            <div class="filter-form">
+                <h3>Filter</h3>
+                <div class="element">
+                    <label for="name">Name: </label><input type="text" name="name" @bind="Filter.Name"/>
+                </div>
+                <div class="element">
+                    <label for="cost">Min Cost: $</label><input min="0" name="cost" type="number" @bind="Filter.LowerCostBound"/>
+                </div>
+                <div class="element">
+                    <label for="cost">Max Cost: $</label><input min="0" name="cost" type="number" @bind="Filter.UpperCostBound"/>
+                </div>
+                <div class="element">
+                    <label for="category">Category: </label><input type="text" name="category" @bind="Filter.Category">
+                </div>
+                <div class="element">
+                    <label for="notImportant">Not Important: </label>
+                    <input type="checkbox" name="notImportant" @bind="Filter.NotImportant"/>
+                    <label for="important">Important: </label>
+                    <input type="checkbox" name="important" @bind="Filter.Important"/>
+                    <label for="veryImportant">Very Important: </label>
+                    <input type="checkbox" name="veryImportant" @bind="Filter.VeryImportant"/>
+                </div>
+                <div class="btns">
+                    <button type="submit" class="btn btn-primary" @onclick="CloseForms">Save</button>
+                    <button class="btn btn-secondary" @onclick="CloseForms">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+@if (IsSortFormOpen)
+{
+    <div class="modal-mask" @onclick="CloseForms">
+        <div class="new-item-form-container" @onclick:stopPropagation>
+            <div class="sort-form">
+                <div class="sort-group">
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("name")' >Name</a>
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("name", true)'>Reverse</a>
+                </div>
+                <div class="sort-group">
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("cost")' >Cost</a>
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("cost", true)'>Reverse</a>
+                </div>
+                <div class="sort-group">
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("importance")' >Importance</a>
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("importance", true)'>Reverse</a>
+                </div>
+                <div class="sort-group">
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("category")' >Category</a>
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("category", true)'>Reverse</a>
+                </div>
+                <div class="sort-group">
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("date wanted")'>Date Wanted</a>
+                    <a class="btn btn-secondary sort" @onclick='() => SortItems("date wanted", true)'>Reverse</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="wishlist-container">
+    <div class="wishlist">
+        @foreach (var item in FilteredItems)
+        {
+            <div class="card wishlist-item">
+                @if (!string.IsNullOrEmpty(item.ImageUrl))
+                {
+                    <img src="@item.ImageUrl" class="card-img-top image">
+                }
+                <div class="card-body content">
+                    <div class="group card-title title">
+                        <h4 class="title">
+                            @item.Name
+                        </h4>
+                        <span @onclick="() => OpenForm(item)" class="oi oi-pencil"></span>
+                    </div>
+                    <div class="group">
+                        <div class="label">Cost: </div>
+                        <div class="cost">$@item.Cost</div>
+                    </div>
+                    <div class="group">
+                        <div class="label">Importance:&nbsp;</div>
+                        <div class="importance">@item.ImportanceName</div>
+                    </div>
+                    <div class="group">
+                        <div class="label">Category:&nbsp;</div>
+                        <div class="category">@item.Category</div>
+                    </div>
+                    @if (item.DateWanted?.DateString != null)
+                    {
+                        <div class="group">
+                            <div class="label">Purchase By:&nbsp;</div>
+                            <div class="date wanted">@item.DateWanted</div>
+                        </div>
+                    }
+                    <div class="group">
+                        <div class="label">Date Added: &nbsp;</div>
+                        <div class="date created">@item.DateCreated</div>
+                    </div>
+                    @if (item.Link != null)
+                    {
+                        <div class="group">
+                            <div class="link">
+                                <a href="@item.Link" target="_blank">Buy Here</a>
+                            </div>
+                        </div>
+                    }
+                    @if (!string.IsNullOrEmpty(item.Description))
+                    {
+                        <div class="group description">
+                            <div class="label">Description:&nbsp;</div>
+                            <div class="description">
+                                @item.Description
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>

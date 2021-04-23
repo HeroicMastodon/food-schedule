@@ -24,11 +24,11 @@ namespace foodSchedule.Pages {
         protected NavigationManager NavigationManager {get; set;}
 
         protected int GetFilteredCosts() {
-            return FilteredExpenses.Sum(expense => expense.Cost);
+            return FilteredExpenses.Sum(expense => expense.TotalCost);
         }
 
         protected int GetTotalCosts() {
-            return Expenses.Sum(expense => expense.Cost);
+            return Expenses.Sum(expense => expense.TotalCost);
         }
 
         protected override async Task OnInitializedAsync() {
@@ -108,7 +108,9 @@ namespace foodSchedule.Pages {
             IsFilterFormOpen = false;
         }
 
-        protected void SortExpenses(string field = "name", bool reverse = false) {
+        protected void SortExpenses(string field = "name", bool reverse = false)
+        {
+            field = field.ToLower();
             switch(field) {
                 case "importance":
                     FilteredExpenses.Sort((expense, other) => expense.Importance.CompareTo(other.Importance));
@@ -118,6 +120,12 @@ namespace foodSchedule.Pages {
                     break;
                 case "cost":
                     FilteredExpenses.Sort((expense, other) => expense.Cost.CompareTo(other.Cost));
+                    break;
+                case "count":
+                    FilteredExpenses.Sort((expense, other)=> expense.Cost.CompareTo(other.Cost));
+                    break;
+                case "total cost":
+                    FilteredExpenses.Sort(((expense, other) => expense.TotalCost.CompareTo(other.TotalCost)));
                     break;
                 default:
                     FilteredExpenses.Sort((expense, other) => expense.Name.CompareTo(other.Name));
