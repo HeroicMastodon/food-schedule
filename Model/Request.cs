@@ -51,4 +51,13 @@ namespace foodSchedule.Model.Request {
         public string UserId {get; set;}
         public List<Expense> Expenses {get; set;}
     }
+    public class UpdateWishlistRequest {
+        public UpdateWishlistRequest(string userId, List<WishListItem> wishlist) {
+            UserId = userId;
+            Wishlist = wishlist;
+        }
+
+        public string UserId {get; set;}
+        public List<WishListItem> Wishlist {get; set;}
+    }
 }

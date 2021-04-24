@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using foodSchedule.Model;
+using foodSchedule.Net;
 using Microsoft.AspNetCore.Components;
 
 namespace foodSchedule.Pages
@@ -10,37 +11,12 @@ namespace foodSchedule.Pages
     public class WishListBase : ComponentBase
     {
         protected WishListItem FormItem { get; set; } = new WishListItem();
+        [Inject]
+        protected  ServerFacade ServerFacade { get; set; }
+        [Inject]
+        protected NavigationManager NavigationManager { get; set; }
 
-        protected List<WishListItem> WishListItems = new List<WishListItem>
-        {
-            new WishListItem()
-            {
-                Name = "one",
-                Category = "Some Category",
-                Cost = 100,
-                Description =
-                    "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
-                Importance = 1,
-            },
-            new WishListItem()
-            {
-                Name = "two",
-                Category = "Category",
-                Cost = 50,
-                Description = "Some Description",
-                Importance = 0,
-                ImageUrl = "https://cdn.pixabay.com/photo/2018/07/15/10/44/dna-3539309__340.jpg"
-            },
-            new WishListItem()
-            {
-                Name = "three",
-                Category = "Some",
-                Cost = 129,
-                Description = "Some Description",
-                Importance = 2,
-                ImageUrl = "https://cdn.pixabay.com/photo/2018/07/15/10/44/dna-3539309__340.jpg"
-            }
-        };
+        protected List<WishListItem> WishListItems = new List<WishListItem>();
 
         protected List<WishListItem> FilteredItems = new List<WishListItem>();
 
@@ -54,6 +30,8 @@ namespace foodSchedule.Pages
 
         protected override async Task OnInitializedAsync()
         {
+            if (! await ServerFacade.Authenticate()) NavigationManager.NavigateTo("");
+            WishListItems = (await ServerFacade.RetrieveWishlist()).Wishlist;
             FilterItems();
         }
 
@@ -84,13 +62,14 @@ namespace foodSchedule.Pages
             base.StateHasChanged();
         }
 
-        protected void SaveItem()
+        protected async void SaveItem()
         {
             if (IsItemNew)
             {
                 WishListItems.Add(FormItem);
             }
 
+            await ServerFacade.UpdateWishlist(WishListItems);
             CloseForms();
         }
 

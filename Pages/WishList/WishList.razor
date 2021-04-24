@@ -101,24 +101,24 @@
         <div class="new-item-form-container" @onclick:stopPropagation>
             <div class="sort-form">
                 <div class="sort-group">
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("name")' >Name</a>
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("name", true)'>Reverse</a>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("name")' >Name</button>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("name", true)'>Reverse</button>
                 </div>
                 <div class="sort-group">
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("cost")' >Cost</a>
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("cost", true)'>Reverse</a>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("cost")' >Cost</button>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("cost", true)'>Reverse</button>
                 </div>
                 <div class="sort-group">
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("importance")' >Importance</a>
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("importance", true)'>Reverse</a>
+                    <button   class="btn btn-secondary sort" @onclick='() => SortItems("importance")' >Importance</button>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("importance", true)'>Reverse</button>
                 </div>
                 <div class="sort-group">
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("category")' >Category</a>
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("category", true)'>Reverse</a>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("category")' >Category</button>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("category", true)'>Reverse</button>
                 </div>
                 <div class="sort-group">
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("date wanted")'>Date Wanted</a>
-                    <a class="btn btn-secondary sort" @onclick='() => SortItems("date wanted", true)'>Reverse</a>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("date wanted")'>Date Wanted</button>
+                    <button class="btn btn-secondary sort" @onclick='() => SortItems("date wanted", true)'>Reverse</button>
                 </div>
             </div>
         </div>

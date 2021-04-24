@@ -4,6 +4,11 @@
     flex-direction: column;
     background: #212121;
     color: white;
+    height: 100%;
+}
+
+html {
+    height: 100vh;
 }
 
 .main {

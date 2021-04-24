@@ -127,5 +127,27 @@ namespace foodSchedule.Net {
 
             return await res.Content.ReadFromJsonAsync<GetExpensesResponse>();
         }
+        public async Task<GetWishlistResponse> RetrieveWishlist() {
+            var request = new HttpRequestMessage(HttpMethod.Get, "wishlist");
+
+            await AddAuthTokenToRequest(request);
+
+            var res = await Client.SendAsync(request);
+            var wishlist = await res.Content.ReadFromJsonAsync<GetWishlistResponse>();
+
+            return wishlist;
+        }
+
+        public async Task<GetWishlistResponse> UpdateWishlist(List<WishListItem> wishlist) {
+            var request = new HttpRequestMessage(HttpMethod.Post, "wishlist/update");
+            request.Content = JsonContent.Create(new UpdateWishlistRequest(null, wishlist));
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", authToken);
+
+            var res = await Client.SendAsync(request);
+
+            if (! res.IsSuccessStatusCode) return null;
+
+            return await res.Content.ReadFromJsonAsync<GetWishlistResponse>();
+        }
     }
 }

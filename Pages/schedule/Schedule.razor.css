@@ -1,6 +1,16 @@
 .day {
 	/* width: calc(100% / 7) */
 	grid-area: day;
+    background: #585858;
+    color: white;
+    border: none;
+    outline: none;
+    border-radius: 5px;
+    padding: .5rem;
+}
+
+.day:focus {
+    outline: none;
 }
 
 .header {

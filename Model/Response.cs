@@ -23,4 +23,14 @@ namespace foodSchedule.Model {
             Expenses = expenses;
         }
     }
+
+    public class GetWishlistResponse
+    {
+        public List<WishListItem> Wishlist { get; set; }
+
+        public GetWishlistResponse(List<WishListItem> wishlist)
+        {
+            Wishlist = wishlist;
+        }
+    }
 }

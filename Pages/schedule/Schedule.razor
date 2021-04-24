@@ -4,38 +4,38 @@
 
 <div class="main-header-container">
     <h3>Schedule</h3>
-    <button @onclick="updateList">Save</button>
+    <button class="btn btn-primary" @onclick="updateList">Save</button>
 </div>
 
 <div class="schedule-container">
     <div class="inner-container">
-        <div class="day header">Sunday</div>
+        <div class="header">Sunday</div>
         <input @onblur="updateList" @bind="Days[0]" type="text" class="day">
     </div>
     <div class="inner-container">
-        <div class="day header">Monday</div>
+        <div class="header">Monday</div>
         <input @onblur="updateList" @bind="Days[1]" type="text" class="day">
     </div>
     <div class="inner-container">
-        <div class="day header">Tuesday</div>
+        <div class="header">Tuesday</div>
         <input @onblur="updateList" @bind="Days[2]" type="text" class="day">
     </div>
     <div class="inner-container">
-        <div class="day header">Wednesday</div>
+        <div class="header">Wednesday</div>
         <input @onblur="updateList" @bind="Days[3]" type="text" class="day">
     </div>
     <div class="inner-container">
-        <div class="day header">Thursday</div>
+        <div class="header">Thursday</div>
         <input @onblur="updateList" @bind="Days[4]" type="text" class="day">
     </div>
     <div class="inner-container">
-        <div class="day header">Friday</div>
+        <div class="header">Friday</div>
         <input @onblur="updateList" @bind="Days[5]" type="text" class="day">
     </div>
     <div class="inner-container">
-        <div class="day header">Saturday</div>
+        <div class="header">Saturday</div>
         <input @onblur="updateList" @bind="Days[6]" type="text" class="day">
     </div>
 </div>
 
-<button @onclick="updateList" class="bottom-btn">Save</button>
+<button @onclick="updateList" class="btn btn-primary bottom-btn">Save</button>

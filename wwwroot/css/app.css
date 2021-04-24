@@ -1,7 +1,16 @@
 @import url('open-iconic/font/css/open-iconic-bootstrap.min.css');
 
+html {
+    height: 100vh;
+}
+
 html, body {
     font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    
+}
+
+body, #app {
+    height: 100%;
 }
 
 a, .btn-link {
