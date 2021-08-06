@@ -10,15 +10,15 @@ namespace foodSchedule.Pages
 {
     public class WishListBase : ComponentBase
     {
-        protected WishListItem FormItem { get; set; } = new WishListItem();
+        protected WishListItem FormItem { get; set; } = new();
         [Inject]
         protected  ServerFacade ServerFacade { get; set; }
         [Inject]
         protected NavigationManager NavigationManager { get; set; }
 
-        protected List<WishListItem> WishListItems = new List<WishListItem>();
+        protected List<WishListItem> WishListItems = new();
 
-        protected List<WishListItem> FilteredItems = new List<WishListItem>();
+        protected List<WishListItem> FilteredItems = new();
 
         protected bool IsNewItemFormOpen { get; set; } = false;
         protected bool IsItemNew { get; set; } = false;
@@ -41,6 +41,13 @@ namespace foodSchedule.Pages
             IsItemNew = item == null;
             IsNewItemFormOpen = true;
             base.StateHasChanged();
+        }
+
+        protected async void DeleteItem(WishListItem item)
+        {
+            WishListItems.Remove(item);
+            await ServerFacade.UpdateWishlist(WishListItems);
+            FilterItems();
         }
 
         protected void OpenFilterForm()
